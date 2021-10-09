@@ -1,0 +1,19 @@
+name: Test
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    # The `repository` check covers the candidates running this workflow on pushes (or PRs) in their own repos.
+    # The `head_ref` check covers GitHub running this workflow on candidates' PRs in our primary repo.
+    if: ${{ github.repository != 'github-interviews/data-storage-api-node' || startsWith(github.head_ref, 'candidate-') }}
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - run: npm install
+      - run: npm run build --if-present
+      - run: npm test
