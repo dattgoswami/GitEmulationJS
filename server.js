@@ -1,6 +1,7 @@
 // You are welcome to drop express for any other server implementation
 const express = require("express");
 const server = express();
+// const routes = import("./routes/index.js");
 const cors = require("cors");
 // The tests exercise the server by requiring it as a module,
 // rather than running it in a separate process and listening on a port
@@ -18,10 +19,13 @@ if (require.main === module) {
   // Start server only when we run this on the command line and explicitly ignore this while testing
   const port = process.env.PORT || 3000;
   server.use(cors());
+  server.use(express.json());
   server.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);
   });
-  server.get("/", function (req, res) {
+  const routes = express.Router();
+  server.use("/data", routes);
+  routes.get("/", function (req, res) {
     res.send(
       "endpoints availabe are /data/{repository}/:objectID [GET], /data/{repository}/:objectID [DELETE], /data/{repository} [PUT]"
     );
@@ -30,7 +34,7 @@ if (require.main === module) {
   //they can be kept inside folder routes/api/data.js
   //we can also have a routes/index.js which contains a routes endpoint which could be a collection of all the endpoints
   //server.use("/data",data);
-  server.get("/data/:repository/:objectID", function (req, res) {
+  routes.get("/:repository/:objectID", function (req, res) {
     const id = req.params.objectID;
     const repository = req.params.repository;
     if (repositoryMap.has(repository)) {
@@ -41,31 +45,37 @@ if (require.main === module) {
       res.send(`repository ${repository} is not available`);
     }
   });
-  server.put("/data/:repository", function (req, res) {
+  routes.put("/:repository", function (req, res) {
     const repository = req.params.repository;
-    const object = req.body.object;
+    const objectValue = req.body.object;
     const sizeValue = req.body.size;
 
     let objectSet = new Set();
     if (repositoryMap.has(repository)) {
       objectSet = repositoryMap.get(repository);
-      if (objectSet.has(object)) {
-        res.json({ error: "object already exists in the repository" });
+      if (!objectSet.has(objectValue)) {
+        res.json({ error: "object does not exist in the repository" });
       } else {
-        objectSet.add(object);
-        objectDataMap.put(object, size);
-        let resultResponse = JSON.stringify({ oid: object, size: sizeValue });
+        objectSet.add(objectValue);
+        objectDataMap.put(objectValue, sizeValue);
+        let resultResponse = JSON.stringify({
+          oid: objectValue,
+          size: sizeValue,
+        });
         res.json(resultResponse);
       }
     } else {
-      objectSet.add(object);
-      objectDataMap.put(object, size);
+      objectSet.add(objectValue);
+      objectDataMap.put(objectValue, sizeValue);
       repositoryMap.put(repository, objectSet);
-      let resultResponse = JSON.stringify({ oid: object, size: sizeValue });
+      let resultResponse = JSON.stringify({
+        oid: objectValue,
+        size: sizeValue,
+      });
       res.json(resultResponse);
     }
   });
-  server.delete("/data/:repository/:objectID", function (req, res) {
+  routes.delete("/:repository/:objectID", function (req, res) {
     const id = req.params.objectID;
     const repository = req.params.repository;
     if (repositoryMap.has(repository)) {
