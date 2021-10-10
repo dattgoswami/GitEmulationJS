@@ -11,21 +11,21 @@ We respect your time, and don't expect you to spend more time than you want to c
 
 ## General Requirements
 
-* The service should de-duplicate data objects by repository.
-* The included tests should pass and not be modified. Adding additional tests is encouraged.
-* The service should implement the API as described below.
-* The data can be persisted in memory, on disk, or wherever you like.
-* External dependencies can be used, but are not required.
+- The service should de-duplicate data objects by repository.
+- The included tests should pass and not be modified. Adding additional tests is encouraged.
+- The service should implement the API as described below.
+- The data can be persisted in memory, on disk, or wherever you like.
+- External dependencies can be used, but are not required.
 
 ## Suggestions
 
-* Your code will be read by humans, so organize it sensibly.
-* Use this repository to store your work. Committing just the final solution is *OK* but we'd love to see your incremental progress. We suggest taking a look at [GitHub flow](https://guides.github.com/introduction/flow/) to structure your commits.
-* [Submit a pull request](https://help.github.com/articles/creating-a-pull-request/) once you are happy with your work.
-* Treat this pull request as if you're at work submitting it to your colleagues, or to an open source project. The body of the pull request can be used to describe your reasoning and any assumptions or tradeoffs in your implementation.
-* You are welcome to use the existing [`express` module](https://www.npmjs.com/package/express) dependency or any other web framework that you are comfortable with.
-* Remember that this is a web application, and multiple requests could come in at the same time. Be sure to plan for this.
-* For data storage, we suggest starting simple. Try to get to a working solution and avoid complex dependencies like databases at first. If you have extra time, you can always experiment with other options.
+- Your code will be read by humans, so organize it sensibly.
+- Use this repository to store your work. Committing just the final solution is _OK_ but we'd love to see your incremental progress. We suggest taking a look at [GitHub flow](https://guides.github.com/introduction/flow/) to structure your commits.
+- [Submit a pull request](https://help.github.com/articles/creating-a-pull-request/) once you are happy with your work.
+- Treat this pull request as if you're at work submitting it to your colleagues, or to an open source project. The body of the pull request can be used to describe your reasoning and any assumptions or tradeoffs in your implementation.
+- You are welcome to use the existing [`express` module](https://www.npmjs.com/package/express) dependency or any other web framework that you are comfortable with.
+- Remember that this is a web application, and multiple requests could come in at the same time. Be sure to plan for this.
+- For data storage, we suggest starting simple. Try to get to a working solution and avoid complex dependencies like databases at first. If you have extra time, you can always experiment with other options.
 
 ## API
 
@@ -93,3 +93,20 @@ npm run test-watch
 ```
 
 Once you have a working implementation, open a pull request that includes your changes.
+
+## Implementation details
+
+GET request on this endpoint
+[http://localhost:3000/data/somerepo/file1]
+should return
+{"oid":"file1","size":123}
+
+PUT request currently does not full work
+
+DELETE
+[http://0.0.0.0:3000/data/somerepo/file1]
+will delete the object id -> file1 from the repository -> somerepo
+
+The repositoryMap contains the repository name and the objects that are present in them. The objects are stored in the set to avoid duplicates.
+
+The objectDataMap has the object name (filename/objectID) and the data(here size is the data).

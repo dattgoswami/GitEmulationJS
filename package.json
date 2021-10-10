@@ -7,13 +7,16 @@
   "main": "server.js",
   "scripts": {
     "test": "jest test.js",
-    "test-watch": "jest --watch --notify --notifyMode=change test.js"
+    "test-watch": "jest --watch --notify --notifyMode=change test.js",
+    "start": "node server.js"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^4.17.1"
   },
   "devDependencies": {
     "jest": "^25.1.0",
+    "nodemon": "^2.0.13",
     "supertest": "^4.0.2"
   }
 }
