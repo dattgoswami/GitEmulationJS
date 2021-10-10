@@ -102,6 +102,12 @@ should return
 {"oid":"file1","size":123}
 
 PUT request currently does not full work
+[http://0.0.0.0:3000/data/somerepo]
+pass this as raw - json
+{
+"object": "file1",
+"size": "125"
+}
 
 DELETE
 [http://0.0.0.0:3000/data/somerepo/file1]
