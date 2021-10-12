@@ -40,6 +40,7 @@ if (require.main === module) {
     if (repositoryMap.has(repository)) {
       let dataSize = objectDataMap.get(id);
       let resultResponse = JSON.stringify({ oid: id, size: dataSize });
+      res.status(200);
       res.send(resultResponse);
     } else {
       res.send(`repository ${repository} is not available`);
@@ -54,6 +55,7 @@ if (require.main === module) {
     if (repositoryMap.has(repository)) {
       objectSet = repositoryMap.get(repository);
       if (!objectSet.has(objectValue)) {
+        res.status(404);
         res.json({ error: "object does not exist in the repository" });
       } else {
         objectSet.add(objectValue);
@@ -62,6 +64,7 @@ if (require.main === module) {
           oid: objectValue,
           size: sizeValue,
         });
+        res.status(201);
         res.json(resultResponse);
       }
     } else {
@@ -81,6 +84,7 @@ if (require.main === module) {
     if (repositoryMap.has(repository)) {
       repositoryMap.get(repository).delete(id);
       objectDataMap.delete(id);
+      res.status(200);
     } else {
       res.json({ error: "no such repository exists" });
     }
